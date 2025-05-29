@@ -11,7 +11,7 @@ Redmine::Plugin.register :custom_buttons do
   url 'https://github.com/jrgarlick/redmine_custom_buttons'
   author_url 'https://github.com/jrgarlick'
 
-  menu :admin_menu, :custom_buttons, { controller: 'custom_buttons', action: 'index' }, caption: 'Custom Buttons1', html: { class: 'icon' }
+  menu :admin_menu, :custom_buttons, { controller: 'custom_buttons', action: 'index' }, caption: 'Custom Buttons', html: { class: 'icon icon-report' }
 
   # Plugin settings (optional)
   # settings default: {}, partial: 'settings/custom_buttons_settings'
@@ -24,5 +24,3 @@ Rails.configuration.to_prepare do
 end
 
 ActionView::Base.send :include, CustomButtonsHelper
-
-

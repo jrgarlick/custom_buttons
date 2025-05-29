@@ -1,6 +1,4 @@
 # plugins/custom_buttons/lib/custom_buttons_hooks.rb
-# require_dependency 'custom_buttons_helper'
-
 class CustomButtonsHooks < Redmine::Hook::ViewListener
   include CustomButtonsHelper
 
