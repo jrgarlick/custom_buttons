@@ -1,0 +1,20 @@
+<% tracker_buttons = CustomButton.where(tracker_id: @issue.tracker_id, active: true) %>
+<% custom_fields_by_name = @issue.custom_field_values.to_h { |f| [f.custom_field.name, f.value] } %>
+<% custom_fields_by_id = @issue.custom_field_values.to_h { |f| [f.custom_field.id.to_s, f.value] } %>
+<% mustache_context = {
+  issue: @issue,
+  project: {
+    id: @issue.project.id,
+    name: @issue.project.name,
+    identifier: @issue.project.identifier
+  },
+  custom_fields: custom_fields_by_name,
+  custom_fields_by_id: custom_fields_by_id
+} %>
+
+<% tracker_buttons.where(location: 'details').each do |button| %>
+  <% title = Mustache.render(button.title_template, mustache_context) %>
+  <% raw_url = Mustache.render(button.url_template, mustache_context) %>
+  <% url = encode_url_preserving_path(raw_url) %>
+  <%= link_to title, url, class: "icon #{button.icon_class}" %>
+<% end %>

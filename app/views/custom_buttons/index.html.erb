@@ -1,0 +1,104 @@
+<% available_icons = [
+  '',                     # (no icon)
+  'icon-add',
+  'icon-edit',
+  'icon-copy',
+  'icon-del',
+  'icon-move',
+  'icon-save',
+  'icon-cancel',
+  'icon-attachment',
+  'icon-zoom-in',
+  'icon-zoom-out',
+  'icon-folder',
+  'icon-folder-open',
+  'icon-package',
+  'icon-email',
+  'icon-time',
+  'icon-time-add',
+  'icon-fav',
+  'icon-fav-off',
+  'icon-reload',
+  'icon-lock',
+  'icon-unlock',
+  'icon-user',
+  'icon-group',
+  'icon-settings',
+  'icon-warning',
+  'icon-history',
+  'icon-comment',
+  'icon-context',
+  'icon-checked',
+  'icon-report',
+  'icon-export',
+  'icon-attachment-new'
+] %>
+
+<h2>Custom Buttons Configuration</h2>
+<%= form_tag url_for(controller: 'custom_buttons', action: 'update', only_path: true), method: :post do %>
+  <% @trackers.each do |tracker| %>
+    <h3><%= tracker.name %></h3>
+    <div class="custom-buttons">
+      <% (@buttons_by_tracker[tracker.id] || []).each_with_index do |button, i| %>
+        <div>
+          <label>Title:</label>
+          <input name="custom_buttons[<%= tracker.id %>][][title_template]" value="<%= button.title_template %>" />
+          <label>URL:</label>
+          <input name="custom_buttons[<%= tracker.id %>][][url_template]" value="<%= button.url_template %>" />
+          <label>Location:</label>
+          <select name="custom_buttons[<%= tracker.id %>][][location]">
+            <option value="details" <%= 'selected' if button.location == 'details' %>>Details</option>
+            <option value="description" <%= 'selected' if button.location == 'description' %>>Description</option>
+          </select>
+          <label>Icon:</label>
+          <select name="custom_buttons[<%= tracker.id %>][][icon_class]">
+            <% available_icons.each do |icon| %>
+              <option value="<%= icon %>" <%= 'selected' if button.icon_class == icon %>><%= icon %></option>
+            <% end %>
+          </select>
+          <label>Position:</label>
+          <input type="number" name="custom_buttons[<%= tracker.id %>][][position]" value="<%= button.position %>" />
+          <label>Active:</label>
+          <input type="checkbox" name="custom_buttons[<%= tracker.id %>][][active]" value="1" <%= 'checked' if button.active %> />
+        </div>
+      <% end %>
+      <!-- Add empty input row for new buttons -->
+      <div>
+        <label>Title:</label>
+        <input name="custom_buttons[<%= tracker.id %>][][title_template]" />
+        <label>URL:</label>
+        <input name="custom_buttons[<%= tracker.id %>][][url_template]" />
+        <label>Location:</label>
+        <select name="custom_buttons[<%= tracker.id %>][][location]">
+          <option value="details">Details</option>
+          <option value="description">Description</option>
+        </select>
+        <label>Icon:</label>
+        <select name="custom_buttons[<%= tracker.id %>][][icon_class]">
+          <% available_icons.each do |icon| %>
+            <option value="<%= icon %>"><%= icon %></option>
+          <% end %>
+        </select>
+        <label>Position:</label>
+        <input type="number" name="custom_buttons[<%= tracker.id %>][][position]" />
+        <label>Active:</label>
+        <input type="checkbox" name="custom_buttons[<%= tracker.id %>][][active]" value="1" checked />
+      </div>
+    </div>
+  <% end %>
+  <%= submit_tag 'Save' %>
+<% end %>
+
+<hr/>
+<h2>Template Help</h2>
+<p>You can use the following placeholders in Title and URL templates:</p>
+<ul>
+  <li><code>{{issue.id}}</code> - Issue ID</li>
+  <li><code>{{issue.subject}}</code> - Issue subject/title</li>
+  <li><code>{{issue.project.name}}</code> - Project name</li>
+  <li><code>{{issue.status.name}}</code> - Issue status</li>
+  <li><code>{{issue.project.identifier}}</code> - Project slug/identifier</li>
+  <li><code>{{custom_fields.Your Custom Field}}</code> - Custom field by label</li>
+  <li><code>{{custom_fields_by_id.123}}</code> - Custom field by ID (e.g., 123)</li>
+</ul>
+<p>Example: <code>https://crm.example.com/search?q={{custom_fields.Customer ID}}</code></p>
